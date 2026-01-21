@@ -1,0 +1,50 @@
+# Core ML/AI
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+
+# Transformers & LLMs
+transformers>=4.45.0
+accelerate>=0.34.0
+bitsandbytes>=0.44.0
+peft>=0.13.0
+sentencepiece>=0.2.0
+protobuf>=5.28.0
+
+# Vision Language Models
+qwen-vl-utils>=0.0.8
+pillow>=10.0.0
+
+# OCR
+paddleocr>=2.8.0
+easyocr>=1.7.0
+
+# Agentic Frameworks
+langchain>=0.3.0
+langchain-community>=0.3.0
+langchain-openai>=0.2.0
+langgraph>=0.2.0
+
+# Vector Store / RAG
+faiss-cpu>=1.9.0
+chromadb>=0.5.0
+
+# Data & Utils
+pandas>=2.2.0
+numpy>=1.26.0
+opencv-python>=4.10.0
+scikit-learn>=1.5.0
+tqdm>=4.66.0
+
+# Evaluation Metrics
+rouge-score>=0.1.2
+nltk>=3.9.0
+
+# Config & Logging
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+wandb>=0.18.0
+
+# API Clients (optional)
+openai>=1.0.0
+google-generativeai>=0.8.0
