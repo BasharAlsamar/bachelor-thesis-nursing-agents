@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-*
+
+# Daten (wichtig! Du willst nicht versehentlich große Datensätze hochladen)
+data/
+datasets/
+*.jpg
+*.png
+*.mp4
+*.avi
+*.pdf
+*.json.gz
+*.parquet
+
+# Modelle (zu groß für GitHub)
+models/
+checkpoints/
+*.pth
+*.bin
+*.safetensors
+*.gguf
+*.onnx
+*.h5
+*.keras
+
+# uv specific
+.python-version
+uv.lock
+
+# Secrets
+.env
+*.key
+api_keys.txt
+secrets/
+.env.*
+
+# Logs & Results
+*.log
+logs/
+results/*.csv
+results/*.png
+experiments/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*~
+
+# PyTorch specific
+lightning_logs/
+wandb/
+mlruns/
