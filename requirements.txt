@@ -1,50 +1,174 @@
-# Core ML/AI
-torch>=2.1.0
-torchvision>=0.16.0
-torchaudio>=2.1.0
+# ══════════════════════════════════════════════════════════════════════════════
+# REQUIREMENTS.TXT - AKTUALISIERT FÜR JANUAR 2026
+# ══════════════════════════════════════════════════════════════════════════════
+# Pflege-Agenten System mit VLM, OCR und LangGraph
+# Optimiert für Handschrift-OCR und multimodale Verarbeitung
+# ══════════════════════════════════════════════════════════════════════════════
 
-# Transformers & LLMs
-transformers>=4.45.0
-accelerate>=0.34.0
-bitsandbytes>=0.44.0
-peft>=0.13.0
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CORE ML/AI FRAMEWORKS
+# ══════════════════════════════════════════════════════════════════════════════
+
+# PyTorch Stack (Latest: 2.6.0 - Jan 2025)
+torch>=2.6.0
+torchvision>=0.21.0
+torchaudio>=2.6.0
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TRANSFORMERS & LLMs
+# ══════════════════════════════════════════════════════════════════════════════
+
+# HuggingFace Ecosystem (Latest: 4.48+)
+transformers>=4.48.0
+accelerate>=1.2.0
+bitsandbytes>=0.45.0
+peft>=0.14.0
 sentencepiece>=0.2.0
-protobuf>=5.28.0
+protobuf>=5.29.0
 
-# Vision Language Models
+
+# ══════════════════════════════════════════════════════════════════════════════
+# VISION LANGUAGE MODELS (VLM)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Qwen-VL Support
 qwen-vl-utils>=0.0.8
-pillow>=10.0.0
 
-# OCR
-paddleocr>=2.8.0
-easyocr>=1.7.0
+# Pillow (Image Processing)
+pillow>=11.0.0
+# Alternative: Pillow-SIMD (wenn installierbar, +30% Performance)
+# pillow-simd>=11.0.0
 
-# Agentic Frameworks
-langchain>=0.3.0
-langchain-community>=0.3.0
-langchain-openai>=0.2.0
-langgraph>=0.2.0
 
-# Vector Store / RAG
-faiss-cpu>=1.9.0
-chromadb>=0.5.0
+# ══════════════════════════════════════════════════════════════════════════════
+# OCR ENGINES
+# ══════════════════════════════════════════════════════════════════════════════
 
-# Data & Utils
-pandas>=2.2.0
-numpy>=1.26.0
+# PaddleOCR (Beste Handschrift-Erkennung!)
+paddleocr>=3.2.0
+# ⚠️  WARNUNG: PaddleOCR hat Kompatibilitätsprobleme mit LangChain 1.0+
+# Lösung: Nutze langchain-community imports statt langchain.docstore
+# Siehe: https://github.com/PaddlePaddle/PaddleOCR/issues/16711
+
+# EasyOCR (Alternative/Ergänzung)
+easyocr>=1.7.2
+
+# Tesseract OCR (Optional, für Baseline-Vergleiche)
+# pytesseract>=0.3.13
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# AGENTIC FRAMEWORKS (LangChain & LangGraph)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# LangChain 1.0 LTS (Released 2025)
+langchain>=1.0.0
+langchain-community>=1.0.0
+langchain-openai>=1.0.0
+
+# LangGraph (Agentic Workflows)
+langgraph>=1.0.0
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# VECTOR STORES & RAG
+# ══════════════════════════════════════════════════════════════════════════════
+
+# FAISS (Latest: 1.13.2)
+faiss-cpu>=1.13.0
+# Alternative für GPU: faiss-gpu>=1.13.0
+
+# ChromaDB (Embedding Store)
+chromadb>=0.6.0
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DATA PROCESSING & UTILITIES
+# ══════════════════════════════════════════════════════════════════════════════
+
+pandas>=2.2.3
+numpy>=1.26.4,<2.0.0  # <2.0 wegen Kompatibilität mit älteren Packages
 opencv-python>=4.10.0
-scikit-learn>=1.5.0
-tqdm>=4.66.0
+scikit-learn>=1.6.0
+tqdm>=4.67.0
 
-# Evaluation Metrics
+# Text Splitting & Processing
+sentence-transformers>=3.3.0
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# EVALUATION METRICS
+# ══════════════════════════════════════════════════════════════════════════════
+
 rouge-score>=0.1.2
-nltk>=3.9.0
+nltk>=3.9.1
+# Für Handschrift-Evaluation:
+# editdistance>=0.8.0
+# jiwer>=3.0.0  # WER/CER Metrics
 
-# Config & Logging
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CONFIG, LOGGING & MONITORING
+# ══════════════════════════════════════════════════════════════════════════════
+
 python-dotenv>=1.0.0
-pyyaml>=6.0.0
-wandb>=0.18.0
+pyyaml>=6.0.2
+wandb>=0.19.0
 
-# API Clients (optional)
-openai>=1.0.0
-google-generativeai>=0.8.0
+# Logging & Debugging
+loguru>=0.7.3
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# API CLIENTS (Cloud VLMs & LLMs)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# OpenAI (GPT-4V, GPT-4o)
+openai>=1.60.0
+
+# Google Gemini
+google-generativeai>=0.8.3
+
+# Anthropic Claude (Optional)
+# anthropic>=0.40.0
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DEVELOPMENT & TESTING (Optional)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# pytest>=8.3.0
+# black>=24.10.0
+# ruff>=0.8.0
+# mypy>=1.13.0
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# WICHTIGE HINWEISE
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# 1. PaddleOCR + LangChain 1.0 Kompatibilität:
+#    - Nutze: from langchain_community.docstore.document import Document
+#    - NICHT: from langchain.docstore.document import Document
+#
+# 2. NumPy Version:
+#    - Einige Packages (PaddleOCR, PaddlePaddle) unterstützen NumPy 2.0 noch nicht
+#    - Daher: numpy>=1.26.4,<2.0.0
+#
+# 3. GPU Support:
+#    - Für CUDA 12.x: torch mit --index-url https://download.pytorch.org/whl/cu121
+#    - Für CUDA 11.8: torch mit --index-url https://download.pytorch.org/whl/cu118
+#    - Für CPU-only: Aktuelle Version ist OK
+#
+# 4. Pillow-SIMD (Optional, +30% Speed):
+#    - Erfordert Build-Dependencies: sudo apt install libjpeg-dev zlib1g-dev
+#    - pip uninstall Pillow && pip install Pillow-SIMD
+#
+# 5. Installation Order (empfohlen):
+#    1. PyTorch + CUDA (falls GPU)
+#    2. pip install -r requirements.txt
+#    3. Teste Kompatibilität: python -c "import paddleocr, langchain"
+#
+# ══════════════════════════════════════════════════════════════════════════════
