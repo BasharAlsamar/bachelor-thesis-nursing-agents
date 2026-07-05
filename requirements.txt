@@ -1,174 +1,348 @@
-# ══════════════════════════════════════════════════════════════════════════════
-# REQUIREMENTS.TXT - AKTUALISIERT FÜR JANUAR 2026
-# ══════════════════════════════════════════════════════════════════════════════
-# Pflege-Agenten System mit VLM, OCR und LangGraph
-# Optimiert für Handschrift-OCR und multimodale Verarbeitung
-# ══════════════════════════════════════════════════════════════════════════════
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# CORE ML/AI FRAMEWORKS
-# ══════════════════════════════════════════════════════════════════════════════
-
-# PyTorch Stack (Latest: 2.6.0 - Jan 2025)
-torch>=2.6.0
-torchvision>=0.21.0
-torchaudio>=2.6.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# TRANSFORMERS & LLMs
-# ══════════════════════════════════════════════════════════════════════════════
-
-# HuggingFace Ecosystem (Latest: 4.48+)
-transformers>=4.48.0
-accelerate>=1.2.0
-bitsandbytes>=0.45.0
-peft>=0.14.0
-sentencepiece>=0.2.0
-protobuf>=5.29.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# VISION LANGUAGE MODELS (VLM)
-# ══════════════════════════════════════════════════════════════════════════════
-
-# Qwen-VL Support
-qwen-vl-utils>=0.0.8
-
-# Pillow (Image Processing)
-pillow>=11.0.0
-# Alternative: Pillow-SIMD (wenn installierbar, +30% Performance)
-# pillow-simd>=11.0.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# OCR ENGINES
-# ══════════════════════════════════════════════════════════════════════════════
-
-# PaddleOCR (Beste Handschrift-Erkennung!)
-paddleocr>=3.2.0
-# ⚠️  WARNUNG: PaddleOCR hat Kompatibilitätsprobleme mit LangChain 1.0+
-# Lösung: Nutze langchain-community imports statt langchain.docstore
-# Siehe: https://github.com/PaddlePaddle/PaddleOCR/issues/16711
-
-# EasyOCR (Alternative/Ergänzung)
-easyocr>=1.7.2
-
-# Tesseract OCR (Optional, für Baseline-Vergleiche)
-# pytesseract>=0.3.13
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# AGENTIC FRAMEWORKS (LangChain & LangGraph)
-# ══════════════════════════════════════════════════════════════════════════════
-
-# LangChain 1.0 LTS (Released 2025)
-langchain>=1.0.0
-langchain-community>=1.0.0
-langchain-openai>=1.0.0
-
-# LangGraph (Agentic Workflows)
-langgraph>=1.0.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# VECTOR STORES & RAG
-# ══════════════════════════════════════════════════════════════════════════════
-
-# FAISS (Latest: 1.13.2)
-faiss-cpu>=1.13.0
-# Alternative für GPU: faiss-gpu>=1.13.0
-
-# ChromaDB (Embedding Store)
-chromadb>=0.6.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# DATA PROCESSING & UTILITIES
-# ══════════════════════════════════════════════════════════════════════════════
-
-pandas>=2.2.3
-numpy>=1.26.4,<2.0.0  # <2.0 wegen Kompatibilität mit älteren Packages
-opencv-python>=4.10.0
-scikit-learn>=1.6.0
-tqdm>=4.67.0
-
-# Text Splitting & Processing
-sentence-transformers>=3.3.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# EVALUATION METRICS
-# ══════════════════════════════════════════════════════════════════════════════
-
-rouge-score>=0.1.2
-nltk>=3.9.1
-# Für Handschrift-Evaluation:
-# editdistance>=0.8.0
-# jiwer>=3.0.0  # WER/CER Metrics
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# CONFIG, LOGGING & MONITORING
-# ══════════════════════════════════════════════════════════════════════════════
-
-python-dotenv>=1.0.0
-pyyaml>=6.0.2
-wandb>=0.19.0
-
-# Logging & Debugging
-loguru>=0.7.3
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# API CLIENTS (Cloud VLMs & LLMs)
-# ══════════════════════════════════════════════════════════════════════════════
-
-# OpenAI (GPT-4V, GPT-4o)
-openai>=1.60.0
-
-# Google Gemini
-google-generativeai>=0.8.3
-
-# Anthropic Claude (Optional)
-# anthropic>=0.40.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# DEVELOPMENT & TESTING (Optional)
-# ══════════════════════════════════════════════════════════════════════════════
-
-# pytest>=8.3.0
-# black>=24.10.0
-# ruff>=0.8.0
-# mypy>=1.13.0
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# WICHTIGE HINWEISE
-# ══════════════════════════════════════════════════════════════════════════════
-#
-# 1. PaddleOCR + LangChain 1.0 Kompatibilität:
-#    - Nutze: from langchain_community.docstore.document import Document
-#    - NICHT: from langchain.docstore.document import Document
-#
-# 2. NumPy Version:
-#    - Einige Packages (PaddleOCR, PaddlePaddle) unterstützen NumPy 2.0 noch nicht
-#    - Daher: numpy>=1.26.4,<2.0.0
-#
-# 3. GPU Support:
-#    - Für CUDA 12.x: torch mit --index-url https://download.pytorch.org/whl/cu121
-#    - Für CUDA 11.8: torch mit --index-url https://download.pytorch.org/whl/cu118
-#    - Für CPU-only: Aktuelle Version ist OK
-#
-# 4. Pillow-SIMD (Optional, +30% Speed):
-#    - Erfordert Build-Dependencies: sudo apt install libjpeg-dev zlib1g-dev
-#    - pip uninstall Pillow && pip install Pillow-SIMD
-#
-# 5. Installation Order (empfohlen):
-#    1. PyTorch + CUDA (falls GPU)
-#    2. pip install -r requirements.txt
-#    3. Teste Kompatibilität: python -c "import paddleocr, langchain"
-#
-# ══════════════════════════════════════════════════════════════════════════════
+absl-py==2.4.0
+accelerate==1.12.0
+addict==2.4.0
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.3
+aiosignal==1.4.0
+aistudio-sdk==0.3.8
+albucore==0.0.24
+albumentations==2.0.8
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.12.1
+astor==0.8.1
+asttokens==3.0.1
+attrs==25.4.0
+audioread==3.1.0
+av==16.1.0
+babel==2.18.0
+backoff==2.2.1
+bce-python-sdk==0.9.60
+bcrypt==5.0.0
+beautifulsoup4==4.14.3
+bert-score==0.3.13
+bitsandbytes==0.49.1
+blinker==1.9.0
+blis==1.3.3
+brotli==1.2.0
+build==1.4.0
+cachetools==6.2.6
+catalogue==2.0.10
+certifi==2026.2.25
+cffi==2.0.0
+cfgv==3.5.0
+chardet==5.2.0
+charset-normalizer==3.4.4
+chromadb==1.4.1
+click==8.3.1
+cloudpathlib==0.24.0
+coloredlogs==15.0.1
+colorlog==6.10.1
+comm==0.2.3
+confection==1.3.3
+contourpy==1.3.3
+cssselect==1.4.0
+cssutils==2.11.1
+csvw==4.0.0
+cuda-bindings==12.9.4
+cuda-pathfinder==1.4.1
+curated-tokenizers==0.0.9
+curated-transformers==0.1.1
+cycler==0.12.1
+cymem==2.0.13
+Cython==3.2.4
+dataclasses-json==0.6.7
+debugpy==1.8.20
+decorator==5.2.1
+distlib==0.4.0
+distro==1.9.0
+dlinfo==2.0.0
+docopt==0.6.2
+durationpy==0.10
+easyocr==1.7.2
+einops==0.8.2
+espeakng-loader==0.2.4
+et_xmlfile==2.0.0
+eval_type_backport==0.3.1
+executing==2.2.1
+faiss-cpu==1.13.2
+fastapi==0.136.0
+filelock==3.25.0
+filetype==1.2.0
+fire==0.7.1
+flash_attn==2.8.3
+Flask==3.1.3
+flatbuffers==25.12.19
+fonttools==4.61.1
+frozenlist==1.8.0
+fsspec==2026.2.0
+ftfy==6.3.1
+future==1.0.0
+gitdb==4.0.12
+GitPython==3.1.46
+googleapis-common-protos==1.72.0
+gradio==6.12.0
+gradio_client==2.4.1
+greenlet==3.3.1
+groovy==0.1.2
+grpcio==1.76.0
+h11==0.16.0
+hf-gradio==0.4.1
+hf-xet==1.4.2
+httpcore==1.0.9
+httptools==0.7.1
+httpx==0.28.1
+httpx-sse==0.4.3
+huggingface_hub==0.36.2
+humanfriendly==10.0
+identify==2.6.17
+idna==3.11
+ImageIO==2.37.2
+imagesize==1.4.1
+importlib_metadata==8.7.1
+importlib_resources==6.5.2
+invoke==2.2.1
+ipykernel==7.1.0
+ipython==9.9.0
+ipython_pygments_lexers==1.1.1
+ipywidgets==8.1.8
+isodate==0.7.2
+itsdangerous==2.2.0
+jedi==0.19.2
+Jinja2==3.1.6
+jiter==0.12.0
+jiwer==4.0.0
+joblib==1.5.3
+jsonpatch==1.33
+jsonpointer==3.0.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+jupyter_client==8.8.0
+jupyter_core==5.9.1
+jupyterlab_widgets==3.0.16
+kiwisolver==1.4.9
+kokoro==0.9.4
+kubernetes==35.0.0
+langchain==0.3.27
+langchain-classic==1.0.1
+langchain-community==0.3.31
+langchain-core==0.3.83
+langchain-openai==0.3.35
+langchain-text-splitters==0.3.11
+langgraph==1.0.7
+langgraph-checkpoint==4.0.0
+langgraph-prebuilt==1.0.7
+langgraph-sdk==0.3.3
+langsmith==0.6.7
+language-tags==1.3.0
+lazy_loader==0.4
+librosa==0.11.0
+llvmlite==0.47.0
+lmdb==1.7.5
+loguru==0.7.3
+lxml==6.0.2
+markdown-it-py==4.0.0
+MarkupSafe==3.0.3
+marshmallow==3.26.2
+matplotlib==3.10.8
+matplotlib-inline==0.2.1
+mdurl==0.1.2
+misaki==0.9.4
+mistralai==1.12.4
+mmh3==5.2.0
+modelscope==1.34.0
+more-itertools==10.8.0
+mpmath==1.3.0
+msgpack==1.1.2
+multidict==6.7.1
+murmurhash==1.0.15
+mypy_extensions==1.1.0
+nest-asyncio==1.6.0
+networkx==3.6.1
+ninja==1.13.0
+nltk==3.9.2
+nodeenv==1.10.0
+num2words==0.5.14
+numba==0.65.0
+numpy==2.4.2
+nvidia-cublas-cu11==11.11.3.6
+nvidia-cublas-cu12==12.4.5.8
+nvidia-cuda-cupti-cu11==11.8.87
+nvidia-cuda-cupti-cu12==12.4.127
+nvidia-cuda-nvrtc-cu11==11.8.89
+nvidia-cuda-nvrtc-cu12==12.4.127
+nvidia-cuda-runtime-cu11==11.8.89
+nvidia-cuda-runtime-cu12==12.4.127
+nvidia-cudnn-cu11==8.7.0.84
+nvidia-cudnn-cu12==9.1.0.70
+nvidia-cufft-cu11==10.9.0.58
+nvidia-cufft-cu12==11.2.1.3
+nvidia-cufile-cu12==1.13.1.3
+nvidia-curand-cu11==10.3.0.86
+nvidia-curand-cu12==10.3.5.147
+nvidia-cusolver-cu11==11.4.1.48
+nvidia-cusolver-cu12==11.6.1.9
+nvidia-cusparse-cu11==11.7.5.86
+nvidia-cusparse-cu12==12.3.1.170
+nvidia-cusparselt-cu12==0.7.1
+nvidia-nccl-cu11==2.20.5
+nvidia-nccl-cu12==2.21.5
+nvidia-nvjitlink-cu12==12.4.127
+nvidia-nvshmem-cu12==3.4.5
+nvidia-nvtx-cu11==11.8.86
+nvidia-nvtx-cu12==12.4.127
+oauthlib==3.3.1
+onnxruntime==1.23.2
+openai==2.16.0
+opencv-python==4.13.0.92
+openpyxl==3.1.5
+opentelemetry-api==1.39.1
+opentelemetry-exporter-otlp-proto-common==1.39.1
+opentelemetry-exporter-otlp-proto-grpc==1.39.1
+opentelemetry-exporter-otlp-proto-http==1.39.1
+opentelemetry-proto==1.39.1
+opentelemetry-sdk==1.39.1
+opentelemetry-semantic-conventions==0.60b1
+opt-einsum==3.3.0
+orjson==3.11.6
+ormsgpack==1.12.2
+overrides==7.7.0
+packaging==26.0
+paddleocr==2.10.0
+paddlepaddle==2.6.2
+paddlex==3.4.1
+pandas==3.0.0
+parso==0.8.5
+pathvalidate==3.3.1
+peft==0.18.1
+pexpect==4.9.0
+phonemizer-fork==3.3.2
+pillow==10.4.0
+piper-tts==1.4.2
+platformdirs==4.9.4
+pooch==1.9.0
+posthog==5.4.0
+pre_commit==4.5.1
+premailer==3.10.0
+preshed==3.0.13
+prettytable==3.17.0
+prompt_toolkit==3.0.52
+propcache==0.4.1
+protobuf==6.33.5
+psutil==7.2.2
+ptyprocess==0.7.0
+pure_eval==0.2.3
+py-cpuinfo==9.0.0
+pybase64==1.4.3
+pyclipper==1.4.0
+pycparser==3.0
+pycryptodome==3.23.0
+pydantic==2.12.5
+pydantic-settings==2.13.1
+pydantic_core==2.41.5
+pydub==0.25.1
+pygame==2.6.1
+Pygments==2.19.2
+pyparsing==3.3.2
+pypdfium2==4.30.0
+PyPika==0.50.0
+pyproject_hooks==1.2.0
+python-bidi==0.6.7
+python-dateutil==2.9.0.post0
+python-discovery==1.1.1
+python-docx==1.2.0
+python-dotenv==1.2.2
+python-multipart==0.0.26
+pytz==2026.1.post1
+PyYAML==6.0.3
+pyzmq==27.1.0
+qwen-tts==0.1.1
+qwen-vl-utils==0.0.14
+RapidFuzz==3.14.3
+rawpy==0.26.1
+rdflib==7.6.0
+referencing==0.37.0
+regex==2026.2.28
+requests==2.32.5
+requests-oauthlib==2.0.0
+requests-toolbelt==1.0.0
+rfc3986==1.5.0
+rich==14.3.3
+rouge_score==0.1.2
+rpds-py==0.30.0
+ruamel.yaml==0.19.1
+safehttpx==0.1.7
+safetensors==0.7.0
+scikit-image==0.26.0
+scikit-learn==1.8.0
+scipy==1.17.0
+seaborn==0.13.2
+segments==2.4.0
+semantic-version==2.10.0
+sentence-transformers==5.2.2
+sentencepiece==0.2.1
+sentry-sdk==2.51.0
+shapely==2.1.2
+shellingham==1.5.4
+simsimd==6.5.13
+six==1.17.0
+smart_open==7.6.0
+smmap==5.0.2
+sniffio==1.3.1
+soundfile==0.13.1
+soupsieve==2.8.3
+sox==1.5.0
+soxr==1.0.0
+spacy==3.8.14
+spacy-curated-transformers==0.3.1
+spacy-legacy==3.0.12
+spacy-loggers==1.0.5
+SQLAlchemy==2.0.46
+srsly==2.5.3
+stack-data==0.6.3
+starlette==1.0.0
+stringzilla==4.6.0
+surya-ocr==0.17.1
+sympy==1.13.1
+tenacity==9.1.2
+termcolor==3.3.0
+thinc==8.3.13
+threadpoolctl==3.6.0
+tifffile==2026.2.20
+tiktoken==0.12.0
+tokenizers==0.22.2
+tomlkit==0.14.0
+torch==2.5.1+cu124
+torchaudio==2.5.1+cu124
+torchvision==0.20.1+cu124
+tornado==6.5.4
+tqdm==4.67.3
+traitlets==5.14.3
+transformers==4.57.3
+triton==3.1.0
+typer==0.24.1
+typer-slim==0.21.1
+typing-inspect==0.9.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+ujson==5.11.0
+uritemplate==4.2.0
+urllib3==2.6.3
+uuid_utils==0.14.0
+uvicorn==0.40.0
+uvloop==0.22.1
+virtualenv==21.1.0
+wandb==0.24.1
+wasabi==1.1.3
+watchfiles==1.1.1
+wcwidth==0.5.3
+weasel==1.0.0
+websocket-client==1.9.0
+websockets==16.0
+Werkzeug==3.1.8
+widgetsnbextension==4.0.15
+wrapt==2.1.2
+xxhash==3.6.0
+yarl==1.22.0
+zipp==3.23.0
+zstandard==0.25.0
