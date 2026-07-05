@@ -53,9 +53,58 @@ def clear_font_cache():
 # FONT-MANAGEMENT
 # ══════════════════════════════════════════════════════════════════════════════
 
+
+def test_font_german_compatibility(font_path, test_size=32):
+    """
+    Testet ob Font deutsche Zeichen rendern kann.
+
+    Args:
+        font_path (str): Pfad zur Schriftart
+        test_size (int): Testgröße
+
+    Returns:
+        bool: True wenn Font kompatibel ist
+    """
+    try:
+        # Teste mit deutschen Zeichen UND längeren Text
+        test_text = "ÄÖÜäöüß123 Patient: Müller\nDatum: 30.10.2025"
+        test_font = ImageFont.truetype(font_path, size=test_size)
+
+        # Erstelle Testbild
+        test_img = Image.new("RGB", (400, 150), color=(255, 255, 255))
+        test_draw = ImageDraw.Draw(test_img)
+        test_draw.multiline_text((10, 10), test_text, font=test_font, fill=(0, 0, 0))
+
+        # Prüfe ob Text gerendert wurde (nicht nur weiß)
+        img_array = np.array(test_img)
+        variance = np.var(img_array)
+
+        # Mehrere Kriterien für Validität:
+        # 1. Variance muss > 80 sein (nicht zu einheitlich)
+        # 2. Genug schwarze Pixel vorhanden
+        black_pixels = np.sum(img_array < 200)  # Dunklere Pixel
+
+        # 3. Text sollte über einen angemessenen Bereich verteilt sein
+        # Check horizontal distribution of dark pixels
+        dark_rows = np.sum(img_array < 200, axis=(1, 2))  # Pixels per row
+        rows_with_text = np.sum(dark_rows > 10)  # Rows with significant content
+
+        is_valid = (
+            variance > 80  # Sufficient variation
+            and black_pixels > 100  # Enough dark pixels
+            and rows_with_text > 10
+        )  # Text spans multiple rows
+
+        return is_valid
+    except Exception as e:
+        # Fehler beim Laden = Font ungültig
+        return False
+
+
 def get_all_font_files(root_dir):
     """
     Sammelt alle .ttf und .otf Dateien aus einem Verzeichnis.
+    Filtert Fonts die deutsche Zeichen nicht darstellen können.
 
     Args:
         root_dir (str): Root-Verzeichnis für die Suche
@@ -63,12 +112,35 @@ def get_all_font_files(root_dir):
     Returns:
         list: Liste mit absoluten Pfaden zu allen Schriftarten
     """
-    font_files = []
+    all_font_files = []
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             if file.lower().endswith((".ttf", ".otf")):
-                font_files.append(os.path.join(root, file))
-    return font_files
+                all_font_files.append(os.path.join(root, file))
+
+    # Teste Fonts auf Deutsche-Zeichen-Kompatibilität
+    print(f"   Teste {len(all_font_files)} Fonts auf Kompatibilität...")
+    compatible_fonts = []
+    incompatible_fonts = []
+
+    for font_path in all_font_files:
+        if test_font_german_compatibility(font_path):
+            compatible_fonts.append(font_path)
+        else:
+            incompatible_fonts.append(os.path.basename(font_path))
+
+    if incompatible_fonts:
+        print(
+            f"   ⚠️  {len(incompatible_fonts)} Fonts übersprungen (keine deutschen Zeichen):"
+        )
+        for font_name in incompatible_fonts[:5]:
+            print(f"      - {font_name}")
+        if len(incompatible_fonts) > 5:
+            print(f"      ... und {len(incompatible_fonts) - 5} weitere")
+
+    print(f"   ✓ {len(compatible_fonts)} kompatible Fonts gefunden")
+
+    return compatible_fonts
 
 
 def create_balanced_random_font_distribution(fonts, num_samples, seed=42):
@@ -118,7 +190,9 @@ def print_font_statistics(font_distribution, fonts):
     unique, counts = np.unique(font_distribution, return_counts=True)
 
     print(f"\n📊 FONT-VERTEILUNG:")
-    print(f"   → Verwendete Fonts: {len(unique)}/{len(fonts)} ({len(unique)/len(fonts)*100:.0f}%)")
+    print(
+        f"   → Verwendete Fonts: {len(unique)}/{len(fonts)} ({len(unique)/len(fonts)*100:.0f}%)"
+    )
     print(f"   → Min/Max Nutzung: {counts.min()}/{counts.max()}")
     print(f"   → Durchschnitt: {counts.mean():.2f}")
     print(f"   → Standardabweichung: {counts.std():.2f}")
@@ -128,6 +202,7 @@ def print_font_statistics(font_distribution, fonts):
 # ══════════════════════════════════════════════════════════════════════════════
 # BILDVERARBEITUNG
 # ══════════════════════════════════════════════════════════════════════════════
+
 
 def mm_to_pixels(mm, dpi):
     """
@@ -298,6 +373,7 @@ def draw_rotated_text(
 # LOGIK-FUNKTIONEN
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def select_page_profile_like_human(text, page_profiles):
     """
     Wählt Seitengröße basierend auf Textlänge (menschlich realistisch).
@@ -337,7 +413,9 @@ def select_page_profile_like_human(text, page_profiles):
     return selected, page_profiles[selected], reason
 
 
-def apply_writing_style_variation(font_size, angle, line_spacing_factor, stress_prob, careful_prob):
+def apply_writing_style_variation(
+    font_size, angle, line_spacing_factor, stress_prob, careful_prob
+):
     """
     Simuliert verschiedene Schreibstile für Realismus.
 
@@ -382,6 +460,7 @@ def apply_writing_style_variation(font_size, angle, line_spacing_factor, stress_
 # SAMPLE-GENERIERUNG (OPTIMIERT für Multiprocessing!)
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def generate_single_sample(args):
     """
     Generiert ein einzelnes synthetisches Sample.
@@ -402,36 +481,38 @@ def generate_single_sample(args):
     ) = args
 
     # Setze lokalen Seed für diesen Worker (wichtig für Multiprocessing!)
-    random.seed(config['RANDOM_SEED'] + seed_offset)
+    random.seed(config["RANDOM_SEED"] + seed_offset)
 
     # Erstelle Textblock
     text_block = (
         f"Patient: {scenario['patient']}\n"
-        f"Datum: {scenario['date']}\n\n" + scenario['notes']
+        f"Datum: {scenario['date']}\n\n" + scenario["notes"]
     )
 
     # Wähle Seitengröße basierend auf Textlänge
     profile_name, params, selection_reason = select_page_profile_like_human(
-        text_block, config['PAGE_PROFILES']
+        text_block, config["PAGE_PROFILES"]
     )
     page_width, page_height = params["size"]
 
     # Wähle Seitenfarbe (gewichtet)
-    color_items = list(config['PAGE_COLORS'].items())
+    color_items = list(config["PAGE_COLORS"].items())
     page_color_name, page_color_rgb = random.choices(
-        color_items, weights=config['PAGE_COLOR_WEIGHTS'], k=1
+        color_items, weights=config["PAGE_COLOR_WEIGHTS"], k=1
     )[0]
 
     # Wähle Schriftfarbe (gewichtet)
-    font_color_items = list(config['FONT_COLORS'].items())
+    font_color_items = list(config["FONT_COLORS"].items())
     font_color_name, font_color_rgb = random.choices(
-        font_color_items, weights=config['FONT_COLOR_WEIGHTS'], k=1
+        font_color_items, weights=config["FONT_COLOR_WEIGHTS"], k=1
     )[0]
 
     # Wähle Papiertyp (gewichtet)
-    paper_type_keys = list(config['PAPER_TYPES'].keys())
-    paper_type_key = random.choices(paper_type_keys, weights=config['PAPER_TYPE_WEIGHTS'], k=1)[0]
-    paper_type_config = config['PAPER_TYPES'][paper_type_key]
+    paper_type_keys = list(config["PAPER_TYPES"].keys())
+    paper_type_key = random.choices(
+        paper_type_keys, weights=config["PAPER_TYPE_WEIGHTS"], k=1
+    )[0]
+    paper_type_config = config["PAPER_TYPES"][paper_type_key]
 
     # Erstelle Bild mit Papiermuster
     image = Image.new("RGBA", (page_width, page_height), color=page_color_rgb + (255,))
@@ -443,14 +524,17 @@ def generate_single_sample(args):
     )
 
     # Initiale Werte für Schreibstil
-    angle = random.uniform(config['ROTATION_RANGE'][0], config['ROTATION_RANGE'][1])
+    angle = random.uniform(config["ROTATION_RANGE"][0], config["ROTATION_RANGE"][1])
     line_spacing_factor = random.uniform(0.4, 0.6)
 
     # Wende Schreibstil-Variationen an
     font_size, angle, line_spacing_factor, writing_style = (
         apply_writing_style_variation(
-            font_size, angle, line_spacing_factor, 
-            config['STRESS_PROBABILITY'], config['CAREFUL_PROBABILITY']
+            font_size,
+            angle,
+            line_spacing_factor,
+            config["STRESS_PROBABILITY"],
+            config["CAREFUL_PROBABILITY"],
         )
     )
 
@@ -488,7 +572,7 @@ def generate_single_sample(args):
 
     # Speichere Bild
     output_filename = f"sample_{sample_idx:04d}"
-    image.save(os.path.join(config['OUTPUT_IMAGES_PATH'], f"{output_filename}.png"))
+    image.save(os.path.join(config["OUTPUT_IMAGES_PATH"], f"{output_filename}.png"))
 
     # Erstelle Ground Truth
     ground_truth = {
@@ -514,8 +598,8 @@ def generate_single_sample(args):
                 "word_count": len(text_block.split()),
                 "note_count": 1,
             },
-            "random_seed": config['RANDOM_SEED'],
-            "font_selection_strategy": config['FONT_DISTRIBUTION_STRATEGY'],
+            "random_seed": config["RANDOM_SEED"],
+            "font_selection_strategy": config["FONT_DISTRIBUTION_STRATEGY"],
         },
         "full_text": final_wrapped_text,
         "original_notes": scenario["notes"],
@@ -523,7 +607,7 @@ def generate_single_sample(args):
 
     # Speichere Ground Truth
     with open(
-        os.path.join(config['OUTPUT_LABELS_PATH'], f"{output_filename}.json"),
+        os.path.join(config["OUTPUT_LABELS_PATH"], f"{output_filename}.json"),
         "w",
         encoding="utf-8",
     ) as f:
@@ -542,6 +626,7 @@ def generate_single_sample(args):
 # ══════════════════════════════════════════════════════════════════════════════
 # STATISTIK-FUNKTIONEN
 # ══════════════════════════════════════════════════════════════════════════════
+
 
 def print_statistics(
     num_samples,
@@ -569,24 +654,26 @@ def print_statistics(
         print(f"  → {profile}: {count} ({percentage:.1f}%)")
 
     print("\n📝 PAPIERTYP-VERTEILUNG:")
-    paper_type_keys = list(config['PAPER_TYPES'].keys())
+    paper_type_keys = list(config["PAPER_TYPES"].keys())
     for paper_type, count in paper_type_usage.items():
         percentage = (count / num_samples) * 100
-        expected = config['PAPER_TYPE_WEIGHTS'][paper_type_keys.index(paper_type)]
-        print(f"  → {config['PAPER_TYPES'][paper_type]['name']}: {count} ({percentage:.1f}%, erwartet ~{expected}%)")
+        expected = config["PAPER_TYPE_WEIGHTS"][paper_type_keys.index(paper_type)]
+        print(
+            f"  → {config['PAPER_TYPES'][paper_type]['name']}: {count} ({percentage:.1f}%, erwartet ~{expected}%)"
+        )
 
     print("\n🎨 SEITENFARBEN:")
-    color_list = list(config['PAGE_COLORS'].keys())
+    color_list = list(config["PAGE_COLORS"].keys())
     for color, count in page_color_usage.items():
         percentage = (count / num_samples) * 100
-        expected = config['PAGE_COLOR_WEIGHTS'][color_list.index(color)]
+        expected = config["PAGE_COLOR_WEIGHTS"][color_list.index(color)]
         print(f"  → {color}: {count} ({percentage:.1f}%, erwartet ~{expected}%)")
 
     print("\n✒️  SCHRIFTFARBEN:")
-    font_color_list = list(config['FONT_COLORS'].keys())
+    font_color_list = list(config["FONT_COLORS"].keys())
     for color, count in font_color_usage.items():
         percentage = (count / num_samples) * 100
-        expected = config['FONT_COLOR_WEIGHTS'][font_color_list.index(color)]
+        expected = config["FONT_COLOR_WEIGHTS"][font_color_list.index(color)]
         print(f"  → {color}: {count} ({percentage:.1f}%, erwartet ~{expected}%)")
 
     print("\n✍️  SCHREIBSTIL-VERTEILUNG:")
@@ -613,10 +700,10 @@ def print_statistics(
 
     unique_combinations = len(combination_counts)
     max_possible = (
-        len(config['PAGE_PROFILES'])
-        * len(config['PAPER_TYPES'])
-        * len(config['PAGE_COLORS'])
-        * len(config['FONT_COLORS'])
+        len(config["PAGE_PROFILES"])
+        * len(config["PAPER_TYPES"])
+        * len(config["PAGE_COLORS"])
+        * len(config["FONT_COLORS"])
         * 3
     )
     coverage = (unique_combinations / max_possible) * 100
