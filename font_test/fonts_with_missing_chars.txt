@@ -1,0 +1,51 @@
+FONTS WITH MISSING CHARACTERS
+================================================================================
+
+Test characters: üöäÜÖÄß0123456789-!"'?/%@#$&*().,;:
+Total fonts tested: 31
+Fonts with missing characters: 14
+
+================================================================================
+
+bellandha
+  Missing: -, !, ", ', ?, /, %, @, #, $, &, *, (, ), ., ,, ;, :
+
+biro_script
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -, !, ", ', ?, /, %, @, #, $, &, *, (, ), ., ,, ;, :
+
+crimson_bouquet
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+fiance_rosalie
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+funky_signature
+  Missing: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -, !, ", ', ?, /, %, @, #, $, &, *, (, ), ., ,, ;, :
+
+hatteria
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+manchester_signature
+  Missing: ß
+
+n_nerusake
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+oahenk_signature
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+oatmoon_signature
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+oblamy_script
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+odading_signature
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+oratman_signature
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß
+
+wishday
+  Missing: ü, ö, ä, Ü, Ö, Ä, ß, "
+
