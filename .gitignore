@@ -1,23 +1,26 @@
-# Python
+# ── Python ──────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
-venv/
 .venv/
+venv/
+env/
 ENV/
 build/
 dist/
 *.egg-info/
 .eggs/
 
+
+
+
 # Jupyter Notebooks
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# IDE
+# ── IDE ─────────────────────────────────
 .vscode/
 .idea/
 *.swp
@@ -25,6 +28,8 @@ dist/
 *.sublime-*
 
 # Daten (wichtig! Du willst nicht versehentlich große Datensätze hochladen)
+chatbot/sounds/
+chatbot/agent_inspector_output/
 data/
 datasets/
 *.jpg
@@ -50,20 +55,6 @@ checkpoints/
 .python-version
 uv.lock
 
-# Secrets
-.env
-*.key
-api_keys.txt
-secrets/
-.env.*
-
-# Logs & Results
-*.log
-logs/
-results/*.csv
-results/*.png
-experiments/*.json
-
 # OS
 .DS_Store
 Thumbs.db
@@ -79,3 +70,82 @@ desktop.ini
 lightning_logs/
 wandb/
 mlruns/
+
+# LaTeX Build-Dateien ignorieren
+*.aux
+*.log
+*.toc
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.nav
+*.snm
+*.vrb
+*.pdf  # Optional: wenn du das PDF nicht committen willst
+
+# macOS Müll
+__MACOSX/
+._*
+.DS_Store
+
+# datasets
+data/
+results/
+
+.venv/
+__pycache__/
+.env
+*.pyc
+
+# ── LaTeX Build-Artefakte (Thesis/) ─────
+Thesis/*.aux
+Thesis/*.bbl
+Thesis/*.blg
+Thesis/*.bcf
+Thesis/*.run.xml
+Thesis/*.fdb_latexmk
+Thesis/*.fls
+Thesis/*.log
+Thesis/*.nlo
+Thesis/*.out
+Thesis/*.synctex.gz
+Thesis/*.toc
+Thesis/*.nav
+Thesis/*.tex
+Thesis/*.snm
+Thesis/*.vrb
+Thesis/build/*
+Thesis/indent.log
+Thesis/bibtex_output.txt
+Thesis/backup.txt
+Thesis/chapters/*.tex
+Thesis/images/*
+Thesis/otherincludes/*
+!Thesis/Abschlussarbeit.pdf
+
+
+# -> Abschlussarbeit.pdf und Abschlussarbeit_alsamar.pdf bleiben bewusst drin!
+
+.vscode/
+
+# ── Secrets (NIEMALS committen) ─────────
+.env
+.env.*
+*.key
+api_keys.txt
+secrets/
+
+# ── Logs & Experiment-Tracking ──────────
+*.log
+logs/
+lightning_logs/
+wandb/
+mlruns/
+results/*.csv
+results/*.png
+experiments/*.json
