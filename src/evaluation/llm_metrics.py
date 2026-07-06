@@ -16,7 +16,6 @@ For structured extraction (JSON), use field-level accuracy and JSON validity che
 
 from typing import Dict, Set, Any, Optional, List, Tuple
 from rouge_score import rouge_scorer
-from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 import json
 import re
 import numpy as np
@@ -77,32 +76,68 @@ def calculate_rouge_scores(reference: str, hypothesis: str) -> Dict[str, float]:
     }
 
 
-def calculate_bleu_score(reference: str, hypothesis: str) -> float:
+def calculate_bertscore(
+    reference: str,
+    hypothesis: str,
+    model_type: str = "bert-base-multilingual-cased",
+    lang: str = "de",
+) -> Dict[str, float]:
     """
-    Calculate BLEU score (commonly used for translation, also for summarization).
+    Calculate BERTScore for semantic similarity evaluation.
+
+    BERTScore uses contextual BERT embeddings to compare hypothesis and reference
+    at the token level.  Unlike BLEU, it captures paraphrasing and synonyms —
+    making it much more suitable for German nursing-note summarization.
+
+    Uses ``bert-base-multilingual-cased`` by default, which has strong German
+    support and is already cached if a HuggingFace model has been downloaded.
 
     Args:
-        reference: Ground truth text
-        hypothesis: Generated text
+        reference:   Gold-standard reference text (e.g., reference_summary)
+        hypothesis:  LLM-generated text to evaluate
+        model_type:  HuggingFace model identifier (default: bert-base-multilingual-cased)
+        lang:        Language code used by bert-score rescaling (default: "de")
 
     Returns:
-        BLEU score (0-100)
+        Dictionary with keys ``precision``, ``recall``, ``f1`` (all 0–100 %).
     """
-    # Tokenize
-    reference_tokens = reference.split()
-    hypothesis_tokens = hypothesis.split()
-
-    # Use smoothing to handle zero counts
-    smoothing = SmoothingFunction().method1
-
     try:
-        bleu = sentence_bleu(
-            [reference_tokens], hypothesis_tokens, smoothing_function=smoothing
-        )
-        return bleu * 100
-    except (ValueError, ZeroDivisionError):
-        # Return 0 for invalid inputs or edge cases
-        return 0.0
+        import torch
+        from bert_score import score as bert_score_fn
+
+        # Pandas>=3 can return read-only NumPy arrays for BERTScore baselines.
+        # Copy read-only arrays before torch conversion to avoid undefined behavior.
+        _orig_from_numpy = torch.from_numpy
+
+        def _safe_from_numpy(arr):
+            if isinstance(arr, np.ndarray) and not arr.flags.writeable:
+                arr = np.array(arr, copy=True)
+            return _orig_from_numpy(arr)
+
+        torch.from_numpy = _safe_from_numpy
+        try:
+            P, R, F1 = bert_score_fn(
+                [hypothesis],
+                [reference],
+                model_type=model_type,
+                lang=lang,
+                rescale_with_baseline=True,
+                verbose=False,
+            )
+        finally:
+            torch.from_numpy = _orig_from_numpy
+        return {
+            "bertscore_precision": float(P[0]) * 100,
+            "bertscore_recall": float(R[0]) * 100,
+            "bertscore_f1": float(F1[0]) * 100,
+        }
+    except Exception as e:
+        return {
+            "bertscore_precision": 0.0,
+            "bertscore_recall": 0.0,
+            "bertscore_f1": 0.0,
+            "_error": str(e),
+        }
 
 
 def extract_medical_terms(text: str) -> Set[str]:
