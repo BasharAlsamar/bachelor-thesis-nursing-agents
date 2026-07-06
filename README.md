@@ -8,7 +8,7 @@ Universität zu Lübeck — Bachelor Thesis 2026
 
 [![Thesis](https://img.shields.io/badge/Thesis-PDF-b31b1b)](Thesis/Abschlussarbeit.pdf)
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-blue)](https://github.com/BasharAlsamar/bachelor-thesis-nursing-agents)
-[![Demo Video](https://img.shields.io/badge/▶_Demo-Video-red)](assets/BA_demo.mp4)
+[![Demo Video](https://img.shields.io/badge/▶_Demo-Video-red)](assets/readme/BA_demo.mp4)
 
 
 </div>
