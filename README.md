@@ -7,8 +7,9 @@
 Universität zu Lübeck — Bachelor Thesis 2026
 
 [![Thesis](https://img.shields.io/badge/Thesis-PDF-b31b1b)](Thesis/build/Abschlussarbeit.pdf)
-[![GitHub](https://img.shields.io/badge/GitHub-Repo-blue)](https://github.com/dein-user/bachelor-thesis-nursing-agents)
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-blue)](https://github.com/BasharAlsamar/bachelor-thesis-nursing-agents)
 
+</div>
 Bachelorarbeit zur automatisierten Verarbeitung handschriftlicher Pflegenotizen: Vergleich und Kombination von OCR-Pipelines, Vision-Language-Modellen (VLMs), LLM-Nachverarbeitung und einem agentenbasierten, robotergestützten Workflow.
 
 Dieses Repository enthält den vollständigen Code, die synthetischen Datensätze, die Experimente sowie die LaTeX-Quelle der Arbeit selbst.
